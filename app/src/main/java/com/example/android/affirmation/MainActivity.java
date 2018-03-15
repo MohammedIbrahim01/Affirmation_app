@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     //**** 10
     private AlarmManager alarmManager;
     private PendingIntent sendToPublisher;
+    //**** 12
+    private Button stopButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         saveButton = (Button) findViewById(R.id.save_button);
         //**** 6
         startNotifyButton = (Button) findViewById(R.id.start_notify_button);
+        //**** 12
+        stopButton = (Button) findViewById(R.id.stop_notify_button);
 
 
         //**** 5
@@ -61,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
         });
         //**** 6
         startNotifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        //**** 12
+        stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

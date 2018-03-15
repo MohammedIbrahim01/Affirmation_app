@@ -38,4 +38,10 @@
         android:layout_height="wrap_content"
         android:text="start notify"/>
 
+    <Button
+        android:id="@+id/stop_notify_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="stop notify"/>
+
 </LinearLayout>
