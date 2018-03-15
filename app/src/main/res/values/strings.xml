@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Affirmation</string>
+
+    <string-array name="notify_rate_array">
+        <item>1 hour</item>
+        <item>2 hour</item>
+        <item>3 hour</item>
+        <item>4 hour</item>
+    </string-array>
 </resources>
