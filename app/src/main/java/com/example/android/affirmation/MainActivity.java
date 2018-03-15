@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private String notifyRate;
     //**** 5
     private Button saveButton;
+    //**** 6
+    private Button startNotifyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +40,19 @@ public class MainActivity extends AppCompatActivity {
         notifyRateSpinner.setAdapter(spinnerAdapter);
         //**** 5
         saveButton = (Button) findViewById(R.id.save_button);
+        //**** 6
+        startNotifyButton = (Button) findViewById(R.id.start_notify_button);
 
 
         //**** 5
         saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        //**** 6
+        startNotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
