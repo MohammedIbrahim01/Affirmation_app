@@ -2,7 +2,9 @@ package com.example.android.affirmation;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -17,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     //**** 4
     private Spinner notifyRateSpinner;
     private String notifyRate;
+    //**** 5
+    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,17 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.notify_rate_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         notifyRateSpinner.setAdapter(spinnerAdapter);
+        //**** 5
+        saveButton = (Button) findViewById(R.id.save_button);
+
+
+        //**** 5
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 
