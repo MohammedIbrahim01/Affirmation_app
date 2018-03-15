@@ -1,5 +1,6 @@
 package com.example.android.affirmation;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -27,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private Button saveButton;
     //**** 6
     private Button startNotifyButton;
+    //**** 10
+    private AlarmManager alarmManager;
+    private PendingIntent sendToPublisher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,5 +104,19 @@ public class MainActivity extends AppCompatActivity {
         return notification;
     }
 
+    //**** 9
+    private void scheduleNotification(Notification notification, int notifyRate){
+        Intent intent = new Intent(this, NotificationPublisher.class);
+        intent.putExtra("notification", notification);
+        sendToPublisher = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, notifyRate * 1000, notifyRate * 1000, sendToPublisher);
+    }
+
+    //**** 10
+    private void stopNotification(){
+        alarmManager.cancel(sendToPublisher);
+    }
 
 }
