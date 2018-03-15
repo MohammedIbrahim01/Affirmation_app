@@ -24,4 +24,9 @@ public class MainActivity extends AppCompatActivity {
         affirmationEditText = (EditText) findViewById(R.id.affirmation_text_view);
 
     }
+
+    //**** 3
+    private String getText(EditText editText){
+        return editText.getText().toString();
+    }
 }
