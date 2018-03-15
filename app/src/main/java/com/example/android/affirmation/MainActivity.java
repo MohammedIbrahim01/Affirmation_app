@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -122,12 +123,13 @@ public class MainActivity extends AppCompatActivity {
         sendToPublisher = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, notifyRate * 1000, notifyRate * 1000, sendToPublisher);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + notifyRate * 1000, notifyRate * 1000, sendToPublisher);
     }
 
     //**** 10
     private void stopNotification(){
-        alarmManager.cancel(sendToPublisher);
+        if(alarmManager != null)
+            alarmManager.cancel(sendToPublisher);
     }
 
 }
