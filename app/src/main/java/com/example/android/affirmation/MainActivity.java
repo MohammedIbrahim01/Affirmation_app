@@ -60,21 +60,21 @@ public class MainActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                saveInfo();
             }
         });
         //**** 6
         startNotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                scheduleNotification(buildNotification(title, affirmation), notifyRate);
             }
         });
         //**** 12
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                stopNotification();
             }
         });
 
