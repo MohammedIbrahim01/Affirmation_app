@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private String affirmation;
     //**** 4
     private Spinner notifyRateSpinner;
-    private String notifyRate;
+    private int notifyRate;                    //String'
     //**** 5
     private Button saveButton;
     //**** 6
@@ -64,5 +64,25 @@ public class MainActivity extends AppCompatActivity {
     //**** 3
     private String getText(EditText editText){
         return editText.getText().toString();
+    }
+
+    //**** 7
+    private void saveInfo(){
+        title = getText(titleEditText);
+        affirmation = getText(affirmationEditText);
+        notifyRate = getNotifyRate(notifyRateSpinner.getSelectedItem().toString());
+    }
+
+    //**** 7
+    private int getNotifyRate(String string){
+        if (string.equals("1 hour"))
+            return 1;
+        else if (string.equals("2 hour"))
+            return 2;
+        else if (string.equals("3 hour"))
+            return 3;
+        else if (string.equals("4 hour"))
+            return 4;
+        else return 0;
     }
 }
