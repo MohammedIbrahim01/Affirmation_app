@@ -28,13 +28,13 @@ public class NotificationPublisher extends BroadcastReceiver{
         title = intent.getExtras().getString("title");
         text = intent.getExtras().getString("text");
         picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture1);
-        notification = getNotification();
+        notification = buildNotification();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
     }
 
-    private Notification getNotification(){
+    private Notification buildNotification(){
         Notification notification = new NotificationCompat.Builder(senderContext, "id")
                 .setSmallIcon(R.drawable.ic_stat_attach_money)
                 .setContentTitle(title)
