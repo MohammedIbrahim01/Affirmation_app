@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -30,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
     //**** 4
     private Spinner notifyRateSpinner;
     private int notifyRate;                    //String'
-    //**** 5
-    private Button saveButton;
+    //**** 5(deleted)
     //**** 6
     private Button startNotifyButton;
     //**** 10
@@ -60,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.notify_rate_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         notifyRateSpinner.setAdapter(spinnerAdapter);
-        //**** 5
-        saveButton = (Button) findViewById(R.id.save_button);
+        //**** 5(deleted)
         //**** 6
         startNotifyButton = (Button) findViewById(R.id.start_notify_button);
         //**** 12
@@ -74,17 +73,12 @@ public class MainActivity extends AppCompatActivity {
         imagePreviewImageView.setImageResource(R.drawable.picture1);
 
 
-        //**** 5
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveInfo();
-            }
-        });
+        //**** 5(deleted)
         //**** 6
         startNotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                saveInfo();
                 scheduleNotification(title, affirmation, notifyRate);
             }
         });

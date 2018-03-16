@@ -17,7 +17,7 @@ public class NotificationPublisher extends BroadcastReceiver{
 
     private String title;
     private String text;
-    private Bitmap picture;
+    private Bitmap defaultPicture;
     private Notification notification;
     private Context senderContext;
     private Bitmap bitmap;
@@ -31,7 +31,7 @@ public class NotificationPublisher extends BroadcastReceiver{
         //**** 15
         bitmap = intent.getParcelableExtra("bitmap");
         //****
-        picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture1);
+        defaultPicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture1);
         notification = buildNotification();
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -43,8 +43,8 @@ public class NotificationPublisher extends BroadcastReceiver{
                 .setSmallIcon(R.drawable.ic_stat_attach_money)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setLargeIcon(bitmap)
-                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setSummaryText(text))
+                .setLargeIcon(bitmap == null? defaultPicture : bitmap) //set default picture if no image picked from gallary
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap == null? defaultPicture : bitmap).setSummaryText(text))
                 .build();
         return notification;
     }
