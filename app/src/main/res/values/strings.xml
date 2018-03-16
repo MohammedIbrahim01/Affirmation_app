@@ -7,4 +7,8 @@
         <item>3 hour</item>
         <item>4 hour</item>
     </string-array>
+    <string-array name="audio_array">
+        <item>Self Esteem</item>
+        <item>Confidence</item>
+    </string-array>
 </resources>

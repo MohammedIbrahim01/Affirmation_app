@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -31,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     //**** 4
     private Spinner notifyRateSpinner;
     private int notifyRate;                    //String'
+    //**** 16
+    private Spinner audioSpinner;
+    private int audioId;
     //**** 5(deleted)
     //**** 6
     private Button startNotifyButton;
@@ -60,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.notify_rate_array, android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         notifyRateSpinner.setAdapter(spinnerAdapter);
+        //**** 16
+        audioSpinner = (Spinner) findViewById(R.id.audio_spinner);
+        ArrayAdapter<CharSequence> audioSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.audio_array, android.R.layout.simple_spinner_item);
+        audioSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        audioSpinner.setAdapter(audioSpinnerAdapter);
         //**** 5(deleted)
         //**** 6
         startNotifyButton = (Button) findViewById(R.id.start_notify_button);
@@ -126,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         title = getText(titleEditText);
         affirmation = getText(affirmationEditText);
         notifyRate = getNotifyRate(notifyRateSpinner.getSelectedItem().toString());
+        audioId = getAudio(audioSpinner.getSelectedItem().toString());
     }
 
     //**** 7
@@ -141,6 +148,14 @@ public class MainActivity extends AppCompatActivity {
         else return 0;
     }
 
+    //**** 16
+    private int getAudio(String string){
+        if (string.equals("Self Esteem"))
+            return R.raw.self_esteem;
+        else
+            return R.raw.confidence;
+    }
+
     //**** 8 (deleted buildNotification)
 
     //**** 9
@@ -149,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("title", title);
         intent.putExtra("text", text);
         intent.putExtra("bitmap", bitmap);
+        intent.putExtra("audioId", audioId);
         sendToPublisher = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);

@@ -2,6 +2,7 @@ package com.example.android.affirmation;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ public class NotificationPublisher extends BroadcastReceiver{
     private Notification notification;
     private Context senderContext;
     private Bitmap bitmap;
+    private int audioId;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -28,6 +30,7 @@ public class NotificationPublisher extends BroadcastReceiver{
         senderContext = context;
         title = intent.getExtras().getString("title");
         text = intent.getExtras().getString("text");
+        audioId = intent.getExtras().getInt("audioId");
         //**** 15
         bitmap = intent.getParcelableExtra("bitmap");
         //****
@@ -39,12 +42,18 @@ public class NotificationPublisher extends BroadcastReceiver{
     }
 
     private Notification buildNotification(){
+        Intent intent = new Intent(senderContext, MainActivity.class);
+        intent.putExtra("bitmap", bitmap == null? defaultPicture : bitmap);
+        intent.putExtra("audioId", audioId);
+
         Notification notification = new NotificationCompat.Builder(senderContext, "id")
                 .setSmallIcon(R.drawable.ic_stat_attach_money)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setLargeIcon(bitmap == null? defaultPicture : bitmap) //set default picture if no image picked from gallary
                 .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap == null? defaultPicture : bitmap).setSummaryText(text))
+                .setContentIntent(PendingIntent.getActivity(senderContext, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                .setAutoCancel(true)
                 .build();
         return notification;
     }
