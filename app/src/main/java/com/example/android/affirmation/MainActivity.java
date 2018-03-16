@@ -1,18 +1,23 @@
 package com.example.android.affirmation;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.SystemClock;
-import android.support.v4.app.NotificationCompat;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private PendingIntent sendToPublisher;
     //**** 12
     private Button stopButton;
+    //**** 14
+    private Button pickImageFromGallaryButton;
+    private ImageView imagePreviewImageView;
+    private int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
         startNotifyButton = (Button) findViewById(R.id.start_notify_button);
         //**** 12
         stopButton = (Button) findViewById(R.id.stop_notify_button);
+        //**** 14
+        pickImageFromGallaryButton = (Button) findViewById(R.id.pick_image_from_gallary_button);
+        imagePreviewImageView = (ImageView) findViewById(R.id.image_preview_imageview);
+
+        //**** 14
+        imagePreviewImageView.setImageResource(R.drawable.picture1);
 
 
         //**** 5
@@ -78,23 +93,47 @@ public class MainActivity extends AppCompatActivity {
                 stopNotification();
             }
         });
+        //**** 14
+        pickImageFromGallaryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToGallary();
+            }
+        });
 
     }
 
+    //**** 14
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri uri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                imagePreviewImageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     //**** 3
-    private String getText(EditText editText){
+    private String getText(EditText editText) {
         return editText.getText().toString();
     }
 
     //**** 7
-    private void saveInfo(){
+    private void saveInfo() {
         title = getText(titleEditText);
         affirmation = getText(affirmationEditText);
         notifyRate = getNotifyRate(notifyRateSpinner.getSelectedItem().toString());
     }
 
     //**** 7
-    private int getNotifyRate(String string){
+    private int getNotifyRate(String string) {
         if (string.equals("1 hour"))
             return 1;
         else if (string.equals("2 hour"))
@@ -109,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
     //**** 8 (deleted buildNotification)
 
     //**** 9
-    private void scheduleNotification(String title, String text, int notifyRate){
+    private void scheduleNotification(String title, String text, int notifyRate) {
         Intent intent = new Intent(this, NotificationPublisher.class);
         intent.putExtra("title", title);
         intent.putExtra("text", text);
@@ -118,10 +157,20 @@ public class MainActivity extends AppCompatActivity {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + notifyRate * 1000, notifyRate * 1000, sendToPublisher);
     }
+
     //**** 10
-    private void stopNotification(){
-        if(alarmManager != null)
+    private void stopNotification() {
+        if (alarmManager != null)
             alarmManager.cancel(sendToPublisher);
+    }
+
+    //**** 14
+    private void goToGallary() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+        startActivityForResult(Intent.createChooser(intent, "Pick Affirmation Image"), PICK_IMAGE_REQUEST);
     }
 
 }
