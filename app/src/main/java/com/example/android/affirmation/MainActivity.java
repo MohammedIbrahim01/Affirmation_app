@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private Button pickImageFromGallaryButton;
     private ImageView imagePreviewImageView;
     private int PICK_IMAGE_REQUEST = 1;
+    //**** 15
+    public Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = data.getData();
 
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 imagePreviewImageView.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -152,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NotificationPublisher.class);
         intent.putExtra("title", title);
         intent.putExtra("text", text);
+        intent.putExtra("bitmap", bitmap);
         sendToPublisher = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);

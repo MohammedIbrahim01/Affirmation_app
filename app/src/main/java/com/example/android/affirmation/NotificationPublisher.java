@@ -20,6 +20,7 @@ public class NotificationPublisher extends BroadcastReceiver{
     private Bitmap picture;
     private Notification notification;
     private Context senderContext;
+    private Bitmap bitmap;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,6 +28,9 @@ public class NotificationPublisher extends BroadcastReceiver{
         senderContext = context;
         title = intent.getExtras().getString("title");
         text = intent.getExtras().getString("text");
+        //**** 15
+        bitmap = intent.getParcelableExtra("bitmap");
+        //****
         picture = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture1);
         notification = buildNotification();
 
@@ -39,8 +43,8 @@ public class NotificationPublisher extends BroadcastReceiver{
                 .setSmallIcon(R.drawable.ic_stat_attach_money)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setLargeIcon(picture)
-                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(picture))
+                .setLargeIcon(bitmap)
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).setSummaryText(text))
                 .build();
         return notification;
     }
