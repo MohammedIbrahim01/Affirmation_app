@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + notifyRate * 1000, notifyRate * 1000, sendToPublisher);
     }
-
     //**** 10
     private void stopNotification(){
         if(alarmManager != null)
