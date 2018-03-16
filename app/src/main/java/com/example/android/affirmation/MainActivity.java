@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         startNotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scheduleNotification(buildNotification(title, affirmation), notifyRate);
+                scheduleNotification(title, affirmation, notifyRate);
             }
         });
         //**** 12
@@ -106,20 +106,13 @@ public class MainActivity extends AppCompatActivity {
         else return 0;
     }
 
-    //**** 8
-    private Notification buildNotification(String title, String text){
-        Notification notification = new NotificationCompat.Builder(this, "affirmation_channel")
-                .setSmallIcon(R.drawable.ic_stat_attach_money)
-                .setContentTitle(title)
-                .setContentText(text)
-                .build();
-        return notification;
-    }
+    //**** 8 (deleted buildNotification)
 
     //**** 9
-    private void scheduleNotification(Notification notification, int notifyRate){
+    private void scheduleNotification(String title, String text, int notifyRate){
         Intent intent = new Intent(this, NotificationPublisher.class);
-        intent.putExtra("notification", notification);
+        intent.putExtra("title", title);
+        intent.putExtra("text", text);
         sendToPublisher = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
