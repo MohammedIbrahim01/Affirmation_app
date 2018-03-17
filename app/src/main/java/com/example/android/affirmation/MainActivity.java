@@ -16,10 +16,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.io.IOException;
 
@@ -54,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
     private Button pickImageFromGallaryButton;
     //**** imagePreview textview
     private TextView imagePreviewTextView;
+    //**** developer state
+    private Switch developerSwich;
+    private TextView developerTextView;
+    private boolean isDeveloper = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
         pickImageFromGallaryButton = (Button) findViewById(R.id.pick_image_from_gallary_button);
         //**** imagePreview TextView
         imagePreviewTextView = (TextView) findViewById(R.id.image_preciew_imageview);
+        //**** developer state
+        developerSwich = (Switch) findViewById(R.id.developer_switch);
+        developerTextView = (TextView) findViewById(R.id.developer_textview);
+        developerTextView.setVisibility(View.INVISIBLE);
+
 
         /*set*/
 
@@ -111,7 +123,21 @@ public class MainActivity extends AppCompatActivity {
         //**** pickImage
         pickImageFromGallaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {pickImageFromGallary();
+            public void onClick(View view) {
+                pickImageFromGallary();
+            }
+        });
+        //**** developer state
+        developerSwich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    isDeveloper = false;
+                }
+                else {
+                    isDeveloper = true;
+                    developerTextView.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -119,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*method*/
 
-    //**** pickImage
+    //**** after user pick an image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -139,28 +165,35 @@ public class MainActivity extends AppCompatActivity {
 
     //**** get text from EditText
     private String getText(EditText editText) {
-        return editText.getText().toString();
+        if(editText.getText().toString().trim().length() != 0)
+            return  editText.getText().toString();
+        else
+            return editText.getHint().toString();       //return default text if it is empty
     }
 
     //**** get notify rate choice
     private int getNotifyRate(String string) {
         if (string.equals("1 hour"))
-            return 1000;
+            return isDeveloper? 1000 : (1 * 60 * 60 *1000); //if developer make notify rate 1 sec to see the notification fast
         else if (string.equals("2 hour"))
-            return 2000;
+            return isDeveloper? 2000 : (1 * 60 * 60 *1000);//if developer make notify rate 2 sec to see the notification fast
         else if (string.equals("3 hour"))
-            return 3000;
+            return isDeveloper? 3000 : (1 * 60 * 60 *1000);//if developer make notify rate 3 sec to see the notification fast
         else if (string.equals("4 hour"))
-            return 4000;
-        else return 0;
+            return isDeveloper? 4000 : (1 * 60 * 60 *1000);//if developer make notify rate 4 sec to see the notification fast
+        else
+            return 0;
     }
 
     //**** get audio choice
-    private int getAudioId(String string){
-        if (string.equals("Self Esteem"))
+    private int getAudioId(String string) {
+        if (string.matches("Self Esteem")) {
             return R.raw.self_esteem;
-        else
+        } else if (string.matches("Confidence")) {
             return R.raw.confidence;
+        } else {
+            return 0;
+        }
     }
 
     //**** save notification information
@@ -172,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //**** prepare information to send to publisher
-    private void prepareInformation(){
+    private void prepareInformation() {
         Intent intent = new Intent(getApplicationContext(), NotificationPublisher.class);
         intent.putExtra("title", title);
         intent.putExtra("text", affirmation);

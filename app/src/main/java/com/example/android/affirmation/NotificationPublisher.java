@@ -37,10 +37,6 @@ public class NotificationPublisher extends BroadcastReceiver{
         defaultPicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_image);
 
         Intent AudioIntent = new Intent(context, AudioActivity.class);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        AudioIntent.putExtra("bitmap", byteArray);
         AudioIntent.putExtra("audioId", audioId);
 
         notification = buildNotification(context, AudioIntent);
@@ -51,12 +47,12 @@ public class NotificationPublisher extends BroadcastReceiver{
 
     private Notification buildNotification(Context context, Intent intent){
 
-        Notification notification = new NotificationCompat.Builder(context, "id0")
+        Notification notification = new NotificationCompat.Builder(context, "id")
                 .setSmallIcon(R.drawable.ic_stat_attach_money)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setLargeIcon(bitmap == null? defaultPicture : bitmap) //set default picture if no image picked from gallary
-                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap == null? defaultPicture : bitmap).setSummaryText(text))
+                .setLargeIcon(bitmap) //set default picture if no image picked from gallary
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap))
                 .setContentIntent(PendingIntent.getActivity(context, 0, intent, 0))
                 .setAutoCancel(true)
                 .build();
