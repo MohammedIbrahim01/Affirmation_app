@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -20,92 +21,97 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    //**** 1
+    /*declaration*/
+
+    //**** title
     private EditText titleEditText;
     private String title;
-    //**** 2
+    //**** affirmation
     private EditText affirmationEditText;
     private String affirmation;
-    //**** 4
+    //**** notifyRate
     private Spinner notifyRateSpinner;
-    private int notifyRate;                    //String'
-    //**** 16
+    private int notifyRate;
+    //**** audio
     private Spinner audioSpinner;
     private int audioId;
-    //**** 5(deleted)
-    //**** 6
+    //**** startNotify
     private Button startNotifyButton;
-    //**** 10
+    //**** stopNotify
+    private Button stopNotifyButton;
+    //**** alarmManager
     private AlarmManager alarmManager;
     private PendingIntent sendToPublisher;
-    //**** 12
-    private Button stopButton;
-    //**** 14
-    private Button pickImageFromGallaryButton;
+    //**** image
     private ImageView imagePreviewImageView;
-    private int PICK_IMAGE_REQUEST = 1;
-    //**** 15
-    public Bitmap bitmap;
+    public Bitmap bitmap;                       //bitmap to send to publisher (custom bitmap or default bitmap if user didn't choos)
+    //**** pickImage
+    private final int PICK_IMAGE_REQUEST = 1;
+    private Button pickImageFromGallaryButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //**** 1
+        /*initialization*/
+
+        //**** title
         titleEditText = (EditText) findViewById(R.id.title_text_view);
-        //**** 2
+        //**** affirmation
         affirmationEditText = (EditText) findViewById(R.id.affirmation_text_view);
-        //**** 4
+        //**** notifyRate
         notifyRateSpinner = (Spinner) findViewById(R.id.notify_rate_spinner);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.notify_rate_array, android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        notifyRateSpinner.setAdapter(spinnerAdapter);
-        //**** 16
+        ArrayAdapter<CharSequence> notifyRateSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.notify_rate_array, android.R.layout.simple_spinner_item);
+        notifyRateSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        notifyRateSpinner.setAdapter(notifyRateSpinnerAdapter);
+        //**** audio
         audioSpinner = (Spinner) findViewById(R.id.audio_spinner);
         ArrayAdapter<CharSequence> audioSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.audio_array, android.R.layout.simple_spinner_item);
         audioSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         audioSpinner.setAdapter(audioSpinnerAdapter);
-        //**** 5(deleted)
-        //**** 6
+        //**** startNotify
         startNotifyButton = (Button) findViewById(R.id.start_notify_button);
-        //**** 12
-        stopButton = (Button) findViewById(R.id.stop_notify_button);
-        //**** 14
-        pickImageFromGallaryButton = (Button) findViewById(R.id.pick_image_from_gallary_button);
+        //**** stopNotify
+        stopNotifyButton = (Button) findViewById(R.id.stop_notify_button);
+        //**** image
         imagePreviewImageView = (ImageView) findViewById(R.id.image_preview_imageview);
+        //**** pickImage
+        pickImageFromGallaryButton = (Button) findViewById(R.id.pick_image_from_gallary_button);
 
-        //**** 14
-        imagePreviewImageView.setImageResource(R.drawable.picture1);
+        /*set*/
 
-
-        //**** 5(deleted)
-        //**** 6
+        //**** image
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_image);            //set bitmap to default
+        imagePreviewImageView.setImageBitmap(bitmap);                                               //set image preview to bitmap
+        //**** startNotify
         startNotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveInfo();
-                scheduleNotification(title, affirmation, notifyRate);
+                saveInfo();                                             //save info
+                prepareInformation();                                   //putExtra the info to send to publisher
+                startNotify();                                          //start repeating notification
             }
         });
-        //**** 12
-        stopButton.setOnClickListener(new View.OnClickListener() {
+        //**** stopNotify
+        stopNotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 stopNotification();
             }
         });
-        //**** 14
+        //**** pickImage
         pickImageFromGallaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                goToGallary();
+            public void onClick(View view) {pickImageFromGallary();
             }
         });
 
     }
 
-    //**** 14
+    /*method*/
+
+    //**** pickImage
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -122,67 +128,69 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //**** 3
+    //**** get text from EditText
     private String getText(EditText editText) {
         return editText.getText().toString();
     }
 
-    //**** 7
-    private void saveInfo() {
-        title = getText(titleEditText);
-        affirmation = getText(affirmationEditText);
-        notifyRate = getNotifyRate(notifyRateSpinner.getSelectedItem().toString());
-        audioId = getAudio(audioSpinner.getSelectedItem().toString());
-    }
-
-    //**** 7
+    //**** get notify rate choice
     private int getNotifyRate(String string) {
         if (string.equals("1 hour"))
-            return 1;
+            return 1000;
         else if (string.equals("2 hour"))
-            return 2;
+            return 2000;
         else if (string.equals("3 hour"))
-            return 3;
+            return 3000;
         else if (string.equals("4 hour"))
-            return 4;
+            return 4000;
         else return 0;
     }
 
-    //**** 16
-    private int getAudio(String string){
+    //**** get audio choice
+    private int getAudioId(String string){
         if (string.equals("Self Esteem"))
             return R.raw.self_esteem;
         else
             return R.raw.confidence;
     }
 
-    //**** 8 (deleted buildNotification)
+    //**** save notification information
+    private void saveInfo() {
+        title = getText(titleEditText);
+        affirmation = getText(affirmationEditText);
+        notifyRate = getNotifyRate(notifyRateSpinner.getSelectedItem().toString());
+        audioId = getAudioId(audioSpinner.getSelectedItem().toString());
+    }
 
-    //**** 9
-    private void scheduleNotification(String title, String text, int notifyRate) {
+    //**** prepare information to send to publisher
+    private void prepareInformation(){
         Intent intent = new Intent(this, NotificationPublisher.class);
         intent.putExtra("title", title);
-        intent.putExtra("text", text);
+        intent.putExtra("text", affirmation);
         intent.putExtra("bitmap", bitmap);
         intent.putExtra("audioId", audioId);
         sendToPublisher = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + notifyRate * 1000, notifyRate * 1000, sendToPublisher);
     }
 
-    //**** 10
+    //**** start sending notifications
+    private void startNotify() {
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + notifyRate, notifyRate, sendToPublisher);
+    }
+
+    //**** stop sending notifications
     private void stopNotification() {
         if (alarmManager != null)
             alarmManager.cancel(sendToPublisher);
     }
 
-    //**** 14
-    private void goToGallary() {
+    //**** pick image from gallary
+    private void pickImageFromGallary() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
 
+        //start chooser if there is multiple choices
         startActivityForResult(Intent.createChooser(intent, "Pick Affirmation Image"), PICK_IMAGE_REQUEST);
     }
 

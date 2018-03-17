@@ -32,7 +32,7 @@ public class NotificationPublisher extends BroadcastReceiver{
         //**** 15
         bitmap = intent.getParcelableExtra("bitmap");
         //****
-        defaultPicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture1);
+        defaultPicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_image);
 
         Intent AudioIntent = new Intent(context, AudioActivity.class);
         AudioIntent.putExtra("bitmap", bitmap);
