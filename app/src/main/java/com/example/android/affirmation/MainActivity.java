@@ -5,9 +5,12 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     //**** pickImage
     private final int PICK_IMAGE_REQUEST = 1;
     private Button pickImageFromGallaryButton;
+    //**** imagePreview textview
+    private TextView imagePreviewTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +84,14 @@ public class MainActivity extends AppCompatActivity {
         imagePreviewImageView = (ImageView) findViewById(R.id.image_preview_imageview);
         //**** pickImage
         pickImageFromGallaryButton = (Button) findViewById(R.id.pick_image_from_gallary_button);
+        //**** imagePreview TextView
+        imagePreviewTextView = (TextView) findViewById(R.id.image_preciew_imageview);
 
         /*set*/
 
-        //**** image
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_image);            //set bitmap to default
-        imagePreviewImageView.setImageBitmap(bitmap);                                               //set image preview to bitmap
+        //**** imagePreview TextView
+        imagePreviewTextView.setText("Image Preview : \n\n\t\t\t'no image selected'");
+
         //**** startNotify
         startNotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 imagePreviewImageView.setImageBitmap(bitmap);
+                imagePreviewTextView.setText("Image Preview :");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -164,12 +173,12 @@ public class MainActivity extends AppCompatActivity {
 
     //**** prepare information to send to publisher
     private void prepareInformation(){
-        Intent intent = new Intent(this, NotificationPublisher.class);
+        Intent intent = new Intent(getApplicationContext(), NotificationPublisher.class);
         intent.putExtra("title", title);
         intent.putExtra("text", affirmation);
         intent.putExtra("bitmap", bitmap);
         intent.putExtra("audioId", audioId);
-        sendToPublisher = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        sendToPublisher = PendingIntent.getBroadcast(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     //**** start sending notifications

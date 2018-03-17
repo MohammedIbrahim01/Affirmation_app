@@ -64,9 +64,10 @@
         android:text="stop notify" />
 
     <TextView
+        android:id="@+id/image_preciew_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Preview"
+        android:text="Image :"
         android:textAppearance="?android:textAppearanceLarge"
         android:layout_gravity="center_horizontal"/>
 
@@ -75,6 +76,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        android:src="@drawable/default_image"/>
+        tools:src="@drawable/default_image"/>
 
 </LinearLayout>
