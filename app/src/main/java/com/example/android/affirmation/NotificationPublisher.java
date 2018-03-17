@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 
+import java.io.ByteArrayOutputStream;
+
 /**
  * Created by x on 15/03/18.
  */
@@ -35,7 +37,10 @@ public class NotificationPublisher extends BroadcastReceiver{
         defaultPicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_image);
 
         Intent AudioIntent = new Intent(context, AudioActivity.class);
-        AudioIntent.putExtra("bitmap", bitmap);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        AudioIntent.putExtra("bitmap", byteArray);
         AudioIntent.putExtra("audioId", audioId);
 
         notification = buildNotification(context, AudioIntent);
