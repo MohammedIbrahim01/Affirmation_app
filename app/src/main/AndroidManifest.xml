@@ -19,10 +19,10 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".NotificationPublisher" />
+        <receiver android:name="com.example.android.affirmation.NotificationPublisher" />
 
-        <activity android:name=".AudioActivity"
-            android:parentActivityName="com.example.android.affirmation.AudioActivity">
+        <activity android:name="com.example.android.affirmation.AudioActivity">
+
         </activity>
     </application>
 

@@ -20,14 +20,12 @@ public class NotificationPublisher extends BroadcastReceiver{
     private String text;
     private Bitmap defaultPicture;
     private Notification notification;
-    private Context senderContext;
     private Bitmap bitmap;
     private int audioId;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         //**** 13
-        senderContext = context;
         title = intent.getExtras().getString("title");
         text = intent.getExtras().getString("text");
         audioId = intent.getExtras().getInt("audioId");
@@ -35,24 +33,26 @@ public class NotificationPublisher extends BroadcastReceiver{
         bitmap = intent.getParcelableExtra("bitmap");
         //****
         defaultPicture = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture1);
-        notification = buildNotification();
+
+        Intent AudioIntent = new Intent(context, AudioActivity.class);
+        AudioIntent.putExtra("bitmap", bitmap);
+        AudioIntent.putExtra("audioId", audioId);
+
+        notification = buildNotification(context, AudioIntent);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notification);
     }
 
-    private Notification buildNotification(){
-        Intent intent = new Intent(senderContext, MainActivity.class);
-        intent.putExtra("bitmap", bitmap == null? defaultPicture : bitmap);
-        intent.putExtra("audioId", audioId);
+    private Notification buildNotification(Context context, Intent intent){
 
-        Notification notification = new NotificationCompat.Builder(senderContext, "id")
+        Notification notification = new NotificationCompat.Builder(context, "id0")
                 .setSmallIcon(R.drawable.ic_stat_attach_money)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setLargeIcon(bitmap == null? defaultPicture : bitmap) //set default picture if no image picked from gallary
                 .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap == null? defaultPicture : bitmap).setSummaryText(text))
-                .setContentIntent(PendingIntent.getActivity(senderContext, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(context, 0, intent, 0))
                 .setAutoCancel(true)
                 .build();
         return notification;
