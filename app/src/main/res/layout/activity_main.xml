@@ -29,12 +29,43 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="notification info :     "
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                android:textAppearance="?android:textAppearanceLarge"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(you can keep the default)\n swipe the notification down to see the image
+ click the notification to play the audio"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  Title :"
+            android:textSize="16sp"/>
+
         <EditText
             android:id="@+id/title_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:hint="You Can Achieve Any Thing" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="  the affirmation :"
+            android:textSize="16sp"/>
 
         <EditText
             android:id="@+id/affirmation_text_view"

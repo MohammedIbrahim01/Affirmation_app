@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
                     isDeveloper = false;
+                    developerTextView.setVisibility(View.INVISIBLE);
                 }
                 else {
                     isDeveloper = true;
